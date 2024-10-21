@@ -2,7 +2,7 @@
 
 import { ref } from "vue";
 import { clickImage } from "../clickImage";
-import Header from "./Header.vue";
+import Header from "../components/Header.vue";
 import { LevelImagesI } from "../types/type";
 const props = defineProps<{countMoney: number, levelImage: LevelImagesI}>()
 const emit = defineEmits<{(e: 'addOne'): void}>()
