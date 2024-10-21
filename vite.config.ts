@@ -4,10 +4,12 @@ import { fileURLToPath, URL } from 'node:url'
 import { resolve } from 'path';
 
 export default defineConfig({
+  plugins: [
+    vue(),
+  ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src')
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
-  },
-  plugins: [vue()]
+  }
 })

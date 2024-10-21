@@ -1,20 +1,23 @@
 <script setup lang="ts">
-
+import { usePointStore } from '../stores/score';
 import { ref } from "vue";
 import { clickImage } from "../clickImage";
 import Header from "../components/Header.vue";
-import { LevelImagesI } from "../types/type";
-const props = defineProps<{countMoney: number, levelImage: LevelImagesI}>()
-const emit = defineEmits<{(e: 'addOne'): void}>()
+// import { LevelImagesI } from "../types/type";
+
+// const props = defineProps<{levelImage: LevelImagesI}>()
 const { tiltDirection, handleImageClick } = clickImage();
 const floatingText = ref<{ x: number; y: number; visible: boolean }[]>([]);
-const img = ref<string>(props.levelImage.level_1)
-function handleClick(event: MouseEvent) {
-  emit('addOne')
+// const img = ref<string>(props.levelImage.level_1)
 
-  if(props.countMoney >= 49) {
-    img.value = props.levelImage.level_2
-  }
+const point = usePointStore();
+
+function handleClick(event: MouseEvent) {
+  point.addPoint()
+
+  // if(point.level >= 1) {
+  //   img.value = props.levelImage.level_2
+  // }
   handleImageClick(event)
 
   const { clientX, clientY } = event;
@@ -27,7 +30,7 @@ function handleClick(event: MouseEvent) {
 </script>
 
 <template>
-  <Header :countMoney="countMoney"/>
+  <Header/>
   <main>
     <div
       class="relative w-[220px] h-[220px] rounded-full select-none bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[15px] transition-transform duration-300 ease-out cursor-pointer"
@@ -38,9 +41,10 @@ function handleClick(event: MouseEvent) {
     >
       <div class="w-full h-full rounded-full overflow-hidden bg-white">
         <img
-          :src="img"
+          :src="point.getImage"
           alt="raccoon"
           class="w-full h-full object-cover"
+          draggable="false"
         />
       </div>
     </div>

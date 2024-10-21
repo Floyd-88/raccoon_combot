@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { usePointStore } from '../stores/score';
 import LevelProgress from "./LevelProgress.vue";
 
-defineProps<{ countMoney: Number }>();
+// defineProps<{ countMoney: Number }>();
+
+const point = usePointStore();
 </script>
 
 <template>
@@ -12,7 +15,7 @@ defineProps<{ countMoney: Number }>();
         <img src="../assets/img/coin.png" alt="coin" />
       </div>
       <h2 class="text-[30px] text-white font-bold select-none font-roboto">
-        {{ countMoney }}
+        {{ point.totalPoints }}
       </h2>
     </div>
   </header>
