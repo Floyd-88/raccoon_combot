@@ -1,61 +1,72 @@
 import { defineStore } from "pinia";
+import { computed, ref } from "vue";
 import { LevelImagesI } from "../types/type";
 
-import raccoon_1 from "@/assets/img/raccoon_1.jpg";
-import raccoon_2 from "@/assets/img/raccoon_2.jpg";
-import raccoon_3 from "@/assets/img/raccoon_3.jpg";
-import raccoon_4 from "@/assets/img/raccoon_4.jpg";
-import raccoon_5 from "@/assets/img/raccoon_5.jpg";
-import raccoon_6 from "@/assets/img/raccoon_6.jpg";
+import img_1 from "@/assets/img/1.jpg";
+import img_2 from "@/assets/img/2.jpg";
+import img_3 from "@/assets/img/3.jpg";
+import img_4 from "@/assets/img/4.jpg";
+import img_5 from "@/assets/img/5.jpg";
+import img_6 from "@/assets/img/6.jpg";
 
 const levelImage: LevelImagesI = {
-  level_1: raccoon_1,
-  level_2: raccoon_2,
-  level_3: raccoon_3,
-  level_4: raccoon_4,
-  level_5: raccoon_5,
-  level_6: raccoon_6,
+  level_1: img_1,
+  level_2: img_2,
+  level_3: img_3,
+  level_4: img_4,
+  level_5: img_5,
+  level_6: img_6,
 };
 
-export const base_points: number = 50;
+export const base_points: number = 25;
 
 const count_levels = new Array(15)
   .fill(0)
   .map((_, i) => base_points * Math.pow(2, i));
 
-export const usePointStore = defineStore("counter", {
-  state: () => {
-    return {
-      totalPoints: 0,
-      level: 0,
-      level_progress: 0,
-      top_level_progress: base_points,
-      image: levelImage,
-    };
-  },
+export const usePointStore = defineStore("counter", () => {
+  const totalPoints = ref(41);
 
-  getters: {
-    interest_level_progress: (state) =>
-      (state.level_progress * 100) / state.top_level_progress,
-    getImage: (state) =>
-      state.image[`level_${state.level + 1}` as keyof typeof levelImage] || state.image.level_6,
-  },
+  // Вычисляем уровень
+  const level = computed(() => {
+    return count_levels.findIndex((points) => totalPoints.value < points);
+  });
 
-  actions: {
-    addPoint() {
-      this.totalPoints++;
-      if (this.totalPoints >= count_levels[this.level]) {
-        if (this.level < count_levels.length - 1) {
-          this.level++;
-          this.level_progress = 0;
-          this.top_level_progress =
-            count_levels[this.level] - count_levels[this.level - 1];
-        } else {
-            console.log('victory')
-        }
-      } else {
-        this.level_progress++;
-      }
-    },
-  },
+  const top_level_progress = computed(() => {
+    const currentLevel = count_levels[level.value];
+    const previousLevelPoints =
+      level.value > 0 ? count_levels[level.value - 1] : 0;
+    return currentLevel - previousLevelPoints;
+  });
+
+  const level_progress = computed(() => {
+    const previousLevelPoints =
+      level.value > 0 ? count_levels[level.value - 1] : 0;
+    return totalPoints.value - previousLevelPoints;
+  });
+
+  const interest_level_progress = computed(() => {
+    return (level_progress.value * 100) / top_level_progress.value;
+  });
+
+  // Получение изображения в зависимости от уровня
+  const getImage = computed(() => {
+    const levelKey = `level_${level.value + 1}` as keyof typeof levelImage;
+    return levelImage[levelKey] || levelImage.level_6;
+  });
+
+  // Action для добавления очков
+  function addPoint() {
+    totalPoints.value++;
+  }
+
+  return {
+    totalPoints,
+    level,
+    top_level_progress,
+    level_progress,
+    interest_level_progress,
+    getImage,
+    addPoint,
+  };
 });

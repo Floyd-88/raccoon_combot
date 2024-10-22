@@ -1,4 +1,1 @@
-{
-    "root": ["./src/clickimage.ts", "./src/main.ts", "./src/vite-env.d.ts", "./src/types/type.ts", "./src/app.vue", "./src/components/header.vue", "./src/components/homepage.vue"],
-    "version": "5.6.3"
-}
+{"root":["./src/main.ts","./src/vite-env.d.ts","./src/router/router.ts","./src/stores/score.ts","./src/types/type.ts","./src/utils/clickimage.ts","./src/utils/usefloatingtext.ts","./src/app.vue","./src/components/footer.vue","./src/components/header.vue","./src/components/levelprogress.vue","./src/views/friendspage.vue","./src/views/homepage.vue","./src/views/taskspage.vue"],"version":"5.6.3"}

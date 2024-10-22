@@ -1,31 +1,18 @@
 <script setup lang="ts">
 import { usePointStore } from '../stores/score';
-import { ref } from "vue";
-import { clickImage } from "../clickImage";
+import { clickImage } from "../utils/clickImage";
+import { useFloatingText } from "../utils/useFloatingText"; 
 import Header from "../components/Header.vue";
-// import { LevelImagesI } from "../types/type";
 
-// const props = defineProps<{levelImage: LevelImagesI}>()
 const { tiltDirection, handleImageClick } = clickImage();
-const floatingText = ref<{ x: number; y: number; visible: boolean }[]>([]);
-// const img = ref<string>(props.levelImage.level_1)
+const { floatingText, showFloatingText } = useFloatingText();
 
 const point = usePointStore();
 
 function handleClick(event: MouseEvent) {
   point.addPoint()
-
-  // if(point.level >= 1) {
-  //   img.value = props.levelImage.level_2
-  // }
   handleImageClick(event)
-
-  const { clientX, clientY } = event;
-  floatingText.value.push({ x: clientX, y: clientY, visible: true });
-
-  setTimeout(() => {
-    floatingText.value.shift();
-  }, 1000);
+  showFloatingText(event); 
 }
 </script>
 
@@ -51,7 +38,7 @@ function handleClick(event: MouseEvent) {
 
     <div v-for="(text, index) in floatingText" 
          :key="index" 
-         class="absolute text-white text-base font-extrabold select-none pointer-events-none transform -translate-x-1/2 -translate-y-1/2 animate-fade-out"
+         class="absolute text-amber-600 text-base font-extrabold select-none pointer-events-none transform -translate-x-1/2 -translate-y-1/2 animate-fade-out"
          :style="{ top: `${text.y}px`, left: `${text.x}px` }">
       +1
     </div>
