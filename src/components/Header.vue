@@ -2,8 +2,6 @@
 import { usePointStore } from '../stores/score';
 import LevelProgress from "./LevelProgress.vue";
 
-// defineProps<{ countMoney: Number }>();
-
 const point = usePointStore();
 </script>
 

@@ -28,7 +28,7 @@ const debouncedUpdateScore = debounce(async (points: number) => {
   }
 }, 500);
 
-export const base_points: number = 25;
+export const base_points: number = 50;
 
 const count_levels = new Array(15)
   .fill(0)

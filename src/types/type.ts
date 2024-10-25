@@ -14,14 +14,6 @@ export interface LevelImagesI {
     amount: number
   }
 
-  // interface FriendsI {
-  //   url: string
-  // }
-
-  // interface UserTasksI {
-  //   string: boolean
-  // }
-
   export interface UserI {
     id: number,
     totalPoints: number,

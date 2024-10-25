@@ -6,7 +6,7 @@ import AdminPage from "../views/AdminPage.vue";
 
 import { useTelegram } from '../services/telegram';
 import SettingsPage from "../admin/SettingsPage.vue";
-import CreateTasks from "../admin/createTasks.vue";
+import CreateTasks from "../admin/CreateTasks.vue";
 
 const routes = [
   {
@@ -42,7 +42,7 @@ const routes = [
         component: SettingsPage,
       }
     ],
-    beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    beforeEnter: (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
       const { telegramUser } = useTelegram();
       const adminID = 123; // Ваш личный Telegram ID
       const id = telegramUser?.id ?? 123

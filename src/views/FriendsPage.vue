@@ -19,8 +19,8 @@ const friends = computed(() =>
 
 function copy() {
   const url = telegramUser?.id
-    ? "https://raccoon-combo.web.app/?ref=" + telegramUser.id
-    : "https://raccoon-combo.web.app/";
+    ? "https://t.me/raccoon_clicker_bot?ref=" + telegramUser.id
+    : "https://t.me/raccoon_clicker_bot";
 
   navigator.clipboard.writeText(url);
   referalText.value = "Copied!";

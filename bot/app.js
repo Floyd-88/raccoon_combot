@@ -1,6 +1,6 @@
 import { Telegraf, Markup } from "telegraf";
-const token = '7820936150:AAGox979ii0tRJZ7Lwoy9s1Q9QBxb8ifnOM'
-const webAppUrl = 'https://raccoon-combo.web.app/'
+const token = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
+const webAppUrl = import.meta.env.VITE_WEB_URL_APP
 const bot = new Telegraf(token);
 
 bot.command("start", (ctx) => {

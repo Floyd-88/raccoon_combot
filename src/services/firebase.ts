@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyB8KX1scKDygbdE-4q2em0OYJrx2tVKQCk",
-    authDomain: "raccoon-combo.firebaseapp.com",
-    databaseURL: "https://raccoon-combo-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "raccoon-combo",
-    storageBucket: "raccoon-combo.appspot.com",
-    messagingSenderId: "991355935151",
-    appId: "1:991355935151:web:1fe8b26a226c205894375a"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID
   };
 
   const app = initializeApp(firebaseConfig);

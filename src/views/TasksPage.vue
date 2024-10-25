@@ -18,9 +18,9 @@ function openTask(task: TasksI) {
   app.updateUserTask(task);
   if (tg) {
     if (task.url.includes("t.me")) {
-      tg.openTelegramLink(task.url);
+      (tg as any).openTelegramLink(task.url);
     } else {
-      tg.openLink(task.url);
+      (tg as any).openLink(task.url);
     }
   }
 }

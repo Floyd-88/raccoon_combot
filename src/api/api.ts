@@ -6,7 +6,7 @@ import { usePointStore } from "../stores/score";
 import { useAppStore } from "../stores/app";
 
 const { telegramUser } = useTelegram() || {};
-const telegramID = telegramUser?.id ?? 123;
+const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
 
 
 export const fetchTasks = async (): Promise<Record<string, TasksI>> => {
