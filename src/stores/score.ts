@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { LevelImagesI } from "../types/type";
+import { debounce } from "lodash";
 
 import img_1 from "@/assets/img/1.jpg";
 import img_2 from "@/assets/img/2.jpg";
@@ -8,6 +9,7 @@ import img_3 from "@/assets/img/3.jpg";
 import img_4 from "@/assets/img/4.jpg";
 import img_5 from "@/assets/img/5.jpg";
 import img_6 from "@/assets/img/6.jpg";
+import { updateTotalPoints } from "../api/api";
 
 const levelImage: LevelImagesI = {
   level_1: img_1,
@@ -18,6 +20,14 @@ const levelImage: LevelImagesI = {
   level_6: img_6,
 };
 
+const debouncedUpdateScore = debounce(async (points: number) => {
+  try {
+    await updateTotalPoints(points);
+  } catch (error) {
+    console.error('Error updating total points:', error);
+  }
+}, 500);
+
 export const base_points: number = 25;
 
 const count_levels = new Array(15)
@@ -25,7 +35,7 @@ const count_levels = new Array(15)
   .map((_, i) => base_points * Math.pow(2, i));
 
 export const usePointStore = defineStore("counter", () => {
-  const totalPoints = ref(41);
+  const totalPoints = ref(0);
 
   // Вычисляем уровень
   const level = computed(() => {
@@ -51,13 +61,19 @@ export const usePointStore = defineStore("counter", () => {
 
   // Получение изображения в зависимости от уровня
   const getImage = computed(() => {
-    const levelKey = `level_${level.value + 1}` as keyof typeof levelImage;
-    return levelImage[levelKey] || levelImage.level_6;
+    const maxLevel = Object.keys(levelImage).length; // Максимальный уровень изображений
+    const levelKey = `level_${Math.min(level.value + 1, maxLevel)}` as keyof typeof levelImage;
+    return levelImage[levelKey];
   });
 
   // Action для добавления очков
   function addPoint() {
-    totalPoints.value++;
+    totalPoints.value += 1;
+    debouncedUpdateScore(totalPoints.value)
+  }
+
+  function setPoint(value: number) {
+    totalPoints.value = value;
   }
 
   return {
@@ -68,5 +84,6 @@ export const usePointStore = defineStore("counter", () => {
     interest_level_progress,
     getImage,
     addPoint,
+    setPoint
   };
 });
