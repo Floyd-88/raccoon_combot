@@ -18,7 +18,7 @@ export const useAppStore = defineStore("app", () => {
       point.setPoint(user.value.totalPoints);
 
       if(ref && +ref !== +user.value.id) {
-        await registerRef(telegramUser?.first_name  || "Unknown", ref)
+        await registerRef(telegramUser?.first_name  || "Raccoon", ref)
       }
 
     } catch (error) {

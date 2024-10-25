@@ -1,16 +1,14 @@
 import { Telegraf, Markup } from "telegraf";
-const token = import.meta.env.VITE_TELEGRAM_BOT_TOKEN
-const webAppUrl = import.meta.env.VITE_WEB_URL_APP
+const token = "7820936150:AAGox979ii0tRJZ7Lwoy9s1Q9QBxb8ifnOM"
+const webAppUrl = "https://raccoon-combo.web.app/"
 const bot = new Telegraf(token);
 
 bot.command("start", (ctx) => {
-  const ref = ctx.message.text.split(" ")[1]; 
-  const gameUrl = ref ? `${webAppUrl}?ref=${ref}` : webAppUrl; 
-
+console.log(ctx)
   ctx.reply(
-    "Привет! Добро пожаловать в игру!",
+    `${webAppUrl}?ref=${ctx.payload}`,
     Markup.inlineKeyboard([
-      Markup.button.webApp("Запустить игру", gameUrl),
+      Markup.button.webApp("Запустить игру", `${webAppUrl}?ref=${ctx.payload}`),
     ])
   );
 });

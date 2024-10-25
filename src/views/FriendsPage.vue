@@ -19,7 +19,7 @@ const friends = computed(() =>
 
 function copy() {
   const url = telegramUser?.id
-    ? "https://t.me/raccoon_clicker_bot?ref=" + telegramUser.id
+    ? "https://t.me/raccoon_clicker_bot?start=" + telegramUser.id
     : "https://t.me/raccoon_clicker_bot";
 
   navigator.clipboard.writeText(url);
