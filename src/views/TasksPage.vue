@@ -3,6 +3,9 @@ import { computed, onMounted } from "vue";
 import { useAppStore } from "../stores/app";
 import { TasksI } from "../types/type";
 import { useTelegram } from "../services/telegram";
+import List from "../components/List.vue";
+import Item from "../components/Item.vue";
+
 const app = useAppStore();
 const { tg } = useTelegram();
 
@@ -27,29 +30,22 @@ function openTask(task: TasksI) {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center items-center w-full max-w-[360px] text-white">
-    <h1 class="text-2xl font-bold mb-4">Your tasks</h1>
-    <h3 class="text-lg mb-4" v-if="app.tasks.length === 0 || incompleteTasks.length === 0">
+  <div class="flex flex-col justify-center w-full px-4 pt-6 max-w-[900px] items-center text-white">
+    <h2 class="text-4xl font-bold mb-8">Your tasks</h2>
+    <h3 class="text-lg mb-2" v-if="app.tasks.length === 0 || incompleteTasks.length === 0">
       Задачи не найдены
     </h3>
 
-    <ul class="flex flex-col gap-2 w-full" v-else>
-      <li
+    <List>
+      <Item
         v-for="task in incompleteTasks"
         :key="task.id"
-        class="flex justify-between items-center bg-gray-800 w-full px-2 py-2 rounded-2xl"
-      >
-        {{ task.title }}
-        <span
-          class="ml-[20px] bg-white hover:bg-white/70 transition-all text-black font-semibold px-2 mr-1 py-0 rounded-2xl cursor-pointer"
-          :class="{ 'bg-green-700 hover:bg-green-700': app.user?.tasks?.[task.id as any] }"
-          ><a @click.prevent="openTask(task)" target="_blank">{{
-            task.amount
-          }}</a>
-        </span
-        >
-      </li>
-    </ul>
+        :title="task.title"
+        :amount="task.amount"
+        @click.prevent="openTask(task)" target="_blank"
+        class="cursor-pointer hover:scale-y-105"
+      />
+    </List>
   </div>
 </template>
 

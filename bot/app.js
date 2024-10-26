@@ -6,7 +6,7 @@ const bot = new Telegraf(token);
 bot.command("start", (ctx) => {
 console.log(ctx)
   ctx.reply(
-    `${webAppUrl}?ref=${ctx.payload}`,
+    "Привет! Добро пожаловать в игру!",
     Markup.inlineKeyboard([
       Markup.button.webApp("Запустить игру", `${webAppUrl}?ref=${ctx.payload}`),
     ])

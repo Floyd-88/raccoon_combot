@@ -40,7 +40,6 @@ export const useAppStore = defineStore("app", () => {
   async function setTasks() {
     try {
       const request = await fetchTasks();
-      console.log(request)
         tasks.value = Object.keys(request).map((id) => ({
           ...request[id as keyof typeof request], id: String(id)
         })); 

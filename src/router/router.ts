@@ -4,9 +4,10 @@ import UsersPage from "../views/FriendsPage.vue";
 import TasksPage from "../views/TasksPage.vue";
 import AdminPage from "../views/AdminPage.vue";
 
-import { useTelegram } from '../services/telegram';
+// import { useTelegram } from '../services/telegram';
 import SettingsPage from "../admin/SettingsPage.vue";
 import CreateTasks from "../admin/CreateTasks.vue";
+import { useAppStore } from "../stores/app";
 
 const routes = [
   {
@@ -43,10 +44,11 @@ const routes = [
       }
     ],
     beforeEnter: (_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
-      const { telegramUser } = useTelegram();
-      const adminID = 123; // Ваш личный Telegram ID
-      const id = telegramUser?.id ?? 123
-      if (id === adminID) {
+      // const { telegramUser } = useTelegram();
+      // const id = telegramUser?.id
+      const app = useAppStore();
+      const adminID = import.meta.env.VITE_ADMIN_TELEGRAM_ID; // Ваш личный Telegram ID
+      if (app.user?.id === +adminID) {
         next();
       } else {
         next('/'); // Если пользователь не админ, перенаправляем на главную страницу

@@ -17,7 +17,6 @@ export const fetchTasks = async (): Promise<Record<string, TasksI>> => {
       (snapshot) => {
         const data = snapshot.val();
         if (data) {
-          console.log(data);
           resolve(data); // Разрешаем промис с данными
         } else {
           reject("No data available"); // Отклоняем промис в случае отсутствия данных
@@ -94,7 +93,6 @@ export const updateTotalPoints = async (totalPoints: number) => {
     
     try {
         await update(userRef, { totalPoints });
-        console.log(`Total points updated to ${totalPoints}`);
     } catch (error) {
         console.error("Error updating total points:", error);
     }

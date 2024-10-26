@@ -2,20 +2,23 @@
 import { computed, ref } from "vue";
 import { useAppStore } from "../stores/app";
 import { useTelegram } from "../services/telegram";
+import List from "../components/List.vue";
+import Item from "../components/Item.vue";
 
 const app = useAppStore();
 const { telegramUser } = useTelegram();
 
-const referalText = ref("Your referal");
+const referalText = ref("Ваша реферальная ссылка");
 
 const friends = computed(() =>
   app.user
     ? Object.keys(app.user.friends || {}).map((id) => ({
         id,
-        name: app.user ? app.user.friends[id] : '',
+        name: app.user ? app.user.friends[id] : "",
       }))
     : []
 );
+const pointFriend = ref<number>(50);
 
 function copy() {
   const url = telegramUser?.id
@@ -28,12 +31,16 @@ function copy() {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center items-center text-white">
-    <h1 class="text-2xl font-bold mb-4">Your Friends</h1>
+  <div
+    class="flex flex-col justify-center w-full px-4 pt-6 max-w-[900px] items-center text-white"
+  >
+    <h2 class="text-4xl font-bold mb-8">Your friends</h2>
     <button
-      class="bg-blue-500 hover:bg-blue-700 mb-4 text-white font-bold py-2 px-4 rounded-3xl shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+      class="bg-blue-500 w-full max-w-60 mb-8 text-white text-base font-bold py-4 px-4 rounded-3xl"
       :class="{
-        'bg-gray-500 hover:bg-gray-500 hover:scale-100':
+        'hover:scale-105 shadow-[0px_4px_10px_rgba(0,153,255,0.4),_0px_6px_20px_rgba(0,153,255,0.3)] transition duration-300 ease-in-out transform  hover:shadow-[0px_6px_14px_rgba(0,153,255,0.6),_0px_8px_24px_rgba(0,153,255,0.4)]':
+          referalText !== 'Copied!',
+        'bg-gray-500 hover:bg-gray-500 scale-100 cursor-auto':
           referalText === 'Copied!',
       }"
       @click="copy"
@@ -41,17 +48,14 @@ function copy() {
       {{ referalText }}
     </button>
     <h3 class="text-lg mb-2" v-if="friends.length === 0">Друзей пока нет</h3>
-
-    <ul class="flex flex-col gap-2">
-      <li
-        class="flex justify-between bg-gray-800 w-[200px] px-2 py-2 rounded-2xl"
+    <List>
+      <Item
         v-for="friend in friends"
         :key="friend.id"
-      >
-        {{ friend.name }}
-        <span class="bg-green-600 px-2 mr-1 py-0 rounded-2xl">50</span>
-      </li>
-    </ul>
+        :title="friend.name"
+        :amount="pointFriend"
+      />
+    </List>
   </div>
 </template>
 

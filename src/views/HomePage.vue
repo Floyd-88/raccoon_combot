@@ -21,13 +21,15 @@ function handleClick(event: MouseEvent) {
     <Header />
     <main>
       <div
-        class="relative w-[220px] h-[220px] rounded-full select-none bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[15px] transition-transform duration-300 ease-out cursor-pointer"
+        class="relative w-[220px] h-[220px] rounded-full select-none shadow-raccoon p-[15px] transition-transform duration-300 ease-out cursor-pointer bg-circle"
         @click="handleClick"
         :style="{
           transform: `rotateX(${tiltDirection.x}deg) rotateY(${tiltDirection.y}deg)`,
         }"
       >
-        <div class="w-full h-full rounded-full overflow-hidden bg-white">
+        <div
+          class="w-full h-full rounded-full overflow-hidden bg-white shadow-inner-raccoon"
+        >
           <img
             :src="point.getImage"
             alt="raccoon"
@@ -50,6 +52,31 @@ function handleClick(event: MouseEvent) {
 </template>
 
 <style scoped>
+.shadow-raccoon {
+  /* Неоновое свечение вокруг */
+  box-shadow: 0px 0px 10px rgba(58, 187, 255, 0.6), 
+              0px 0px 25px rgba(90, 255, 135, 0.5), 
+              0px 0px 40px rgba(255, 60, 120, 0.4);
+  border-radius: 50%;
+
+  /* Градиент для неонового эффекта с блеском */
+  background: radial-gradient(circle at 30% 30%, #a0f, #0ff, #0f0 70%, #ff0 100%);
+}
+
+.shadow-inner-raccoon {
+  /* Внутренний глянец */
+  box-shadow: inset 0px 6px 10px rgba(255, 255, 255, 0.4), /* Верхний блеск */
+              inset 0px -6px 8px rgba(0, 0, 0, 0.3); /* Нижняя тень */
+}
+
+.bg-circle {
+  /* Гладкий градиент для имитации стеклянного купола с неоном */
+  background: linear-gradient(145deg, #0ff, #a0f 30%, #F5E 61%);
+  border: 0 solid rgba(255, 255, 255, 0.4); /* Глянцевая рамка */
+}
+
+
+
 @keyframes fadeOut {
   0% {
     opacity: 1;
@@ -57,7 +84,7 @@ function handleClick(event: MouseEvent) {
   }
   100% {
     opacity: 0;
-    transform: translateY(-30px);
+    transform: translateY(-60px);
   }
 }
 .animate-fade-out {
