@@ -1,4 +1,4 @@
-import { ref, get, update, onValue, set } from "firebase/database";
+import { ref, get, update, remove, onValue, set } from "firebase/database";
 import { database } from "../services/firebase";
 import { TasksI, UserI } from "../types/type";
 import { useTelegram } from "../services/telegram";
@@ -7,7 +7,6 @@ import { useAppStore } from "../stores/app";
 
 const { telegramUser } = useTelegram() || {};
 const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
-
 
 export const fetchTasks = async (): Promise<Record<string, TasksI>> => {
   const userRef = ref(database, "tasks/");
@@ -30,32 +29,32 @@ export const fetchTasks = async (): Promise<Record<string, TasksI>> => {
 };
 
 export async function completeTask(userID: number, task: TasksI) {
-    const point = usePointStore();
-    const app = useAppStore(); 
+  const point = usePointStore();
+  const app = useAppStore();
 
-    const newTotalPoints = point.totalPoints + task.amount;
-    point.setPoint(newTotalPoints);
+  const newTotalPoints = point.totalPoints + task.amount;
+  point.setPoint(newTotalPoints);
 
-    const userRef = ref(database, `users/${userID}`);
-    const updates = {
-        [`tasks/${task.id}`]: true, 
-        totalPoints: newTotalPoints 
+  const userRef = ref(database, `users/${userID}`);
+  const updates = {
+    [`tasks/${task.id}`]: true,
+    totalPoints: newTotalPoints,
+  };
+
+  try {
+    await update(userRef, updates);
+
+    const updatedTasks = {
+      ...app.user?.tasks, // сохраняем предыдущие задачи
+      [task.id]: true, // добавляем новую выполненную задачу
     };
 
-    try {
-        await update(userRef, updates);
+    app.setUserTasks(updatedTasks);
 
-        const updatedTasks = {
-          ...app.user?.tasks, // сохраняем предыдущие задачи
-          [task.id]: true, // добавляем новую выполненную задачу
-      };
-      
-      app.setUserTasks(updatedTasks);
-
-        console.log("Task completed updated");
-    } catch (error) {
-        console.error("Error updating user data:", error);
-    }
+    console.log("Task completed updated");
+  } catch (error) {
+    console.error("Error updating user data:", error);
+  }
 }
 
 export const getOrCreateUser = async (): Promise<UserI> => {
@@ -89,14 +88,14 @@ export const getOrCreateUser = async (): Promise<UserI> => {
 };
 
 export const updateTotalPoints = async (totalPoints: number) => {
-    const userRef = ref(database, `users/${telegramID}`);
-    
-    try {
-        await update(userRef, { totalPoints });
-    } catch (error) {
-        console.error("Error updating total points:", error);
-    }
-}
+  const userRef = ref(database, `users/${telegramID}`);
+
+  try {
+    await update(userRef, { totalPoints });
+  } catch (error) {
+    console.error("Error updating total points:", error);
+  }
+};
 
 export const registerRef = async (first_name: string, refId: string) => {
   const userRef = ref(database, `users/${refId}`);
@@ -111,7 +110,7 @@ export const registerRef = async (first_name: string, refId: string) => {
       if (!friends.includes(first_name)) {
         // Обновляем список друзей и очки
         await update(userRef, {
-          friends: {...friends, telegramID: first_name},
+          friends: { ...friends, telegramID: first_name },
           totalPoints: (userData.totalPoints || 0) + 50,
         });
         console.log(`Друг ${first_name} добавлен и очки обновлены.`);
@@ -122,5 +121,22 @@ export const registerRef = async (first_name: string, refId: string) => {
   } catch (error) {
     console.error("Ошибка при обновлении данных пользователя:", error);
   }
+};
 
-}
+export const removeTask = async (localTask: TasksI) => {
+  try {
+    const taskRef = ref(database, `tasks/${localTask.id}`);
+    await remove(taskRef);
+  } catch (error) {
+    console.error("Ошибка при удалении задачи:", error);
+  }
+};
+
+export const editTask = async (localTask: TasksI) => {
+  try {
+    const taskRef = ref(database, `tasks/${localTask.id}`);
+    await set(taskRef, localTask);
+  } catch (error) {
+    console.error("Ошибка при редактировании задачи:", error);
+  }
+};

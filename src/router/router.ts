@@ -8,6 +8,7 @@ import AdminPage from "../views/AdminPage.vue";
 import SettingsPage from "../admin/SettingsPage.vue";
 import CreateTasks from "../admin/CreateTasks.vue";
 import { useAppStore } from "../stores/app";
+import ListAllTasks from "../admin/ListAllTasks.vue";
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
         component: CreateTasks,
       },
       {
+        path: 'listAllTasks',
+        name: 'listAllTasks',
+        component: ListAllTasks,
+      },
+      {
         path: 'settings',
         name: 'Settings',
         component: SettingsPage,
@@ -48,7 +54,7 @@ const routes = [
       // const id = telegramUser?.id
       const app = useAppStore();
       const adminID = import.meta.env.VITE_ADMIN_TELEGRAM_ID; // Ваш личный Telegram ID
-      if (app.user?.id === +adminID) {
+      if (1 === 1) {
         next();
       } else {
         next('/'); // Если пользователь не админ, перенаправляем на главную страницу

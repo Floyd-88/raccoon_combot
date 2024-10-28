@@ -54,6 +54,7 @@ function copy() {
         :key="friend.id"
         :title="friend.name"
         :amount="pointFriend"
+        shadow="friends"
       />
     </List>
   </div>

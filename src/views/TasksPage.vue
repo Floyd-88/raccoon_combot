@@ -42,6 +42,7 @@ function openTask(task: TasksI) {
         :key="task.id"
         :title="task.title"
         :amount="task.amount"
+        shadow="tasks"
         @click.prevent="openTask(task)" target="_blank"
         class="cursor-pointer hover:scale-y-105"
       />

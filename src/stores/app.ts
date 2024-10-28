@@ -1,11 +1,18 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { fetchTasks, getOrCreateUser, completeTask, registerRef } from "../api/api";
+import {
+  fetchTasks,
+  getOrCreateUser,
+  completeTask,
+  registerRef,
+  removeTask,
+  editTask
+} from "../api/api";
 import { TasksI, UserI } from "../types/type";
 import { usePointStore } from "./score";
 import { useTelegram } from "../services/telegram";
 
-const {telegramUser} = useTelegram()
+const { telegramUser } = useTelegram();
 
 export const useAppStore = defineStore("app", () => {
   const user = ref<UserI | null>(null);
@@ -17,10 +24,9 @@ export const useAppStore = defineStore("app", () => {
       const point = usePointStore();
       point.setPoint(user.value.totalPoints);
 
-      if(ref && +ref !== +user.value.id) {
-        await registerRef(telegramUser?.first_name  || "Raccoon", ref)
+      if (ref && +ref !== +user.value.id) {
+        await registerRef(telegramUser?.first_name || "Raccoon", ref);
       }
-
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -40,9 +46,10 @@ export const useAppStore = defineStore("app", () => {
   async function setTasks() {
     try {
       const request = await fetchTasks();
-        tasks.value = Object.keys(request).map((id) => ({
-          ...request[id as keyof typeof request], id: String(id)
-        })); 
+      tasks.value = Object.keys(request).map((id) => ({
+        ...request[id as keyof typeof request],
+        id: String(id),
+      }));
     } catch (error) {
       console.error("Error fetching tasks:", error);
     }
@@ -54,12 +61,35 @@ export const useAppStore = defineStore("app", () => {
     }
   }
 
+  async function editStorageTask(localTask: TasksI) {
+    try {
+      await editTask(localTask)
+      tasks.value = tasks.value.map((task) => 
+        task.id === localTask.id ? localTask : task
+      );
+    } catch (error) {
+      console.error("Error edit tasks:", error);
+    }
+  }
+
+  async function removeStorageTask(localTask: TasksI) {
+    try {
+      await removeTask(localTask)
+      tasks.value = tasks.value.filter((task) => task.id !== localTask.id);
+      console.log("Task removed successfully:", localTask.id);
+    } catch (error) {
+      console.error("Error remove tasks:", error);
+    }
+  }
+
   return {
     user,
     tasks,
     init,
     setTasks,
     updateUserTask,
-    setUserTasks
+    setUserTasks,
+    editStorageTask,
+    removeStorageTask,
   };
 });

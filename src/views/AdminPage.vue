@@ -18,6 +18,11 @@
               </router-link>
             </li>
             <li class="w-full">
+              <router-link to="/admin/listAllTasks" class="block p-3 bg-gray-700 hover:bg-gray-600 rounded-md text-center w-full">
+                List All Tasks
+              </router-link>
+            </li>
+            <li class="w-full">
               <router-link to="/admin/settings" class="block p-3 bg-gray-700 hover:bg-gray-600 rounded-md text-center w-full">
                 Settings
               </router-link>
