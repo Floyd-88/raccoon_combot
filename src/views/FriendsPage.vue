@@ -4,8 +4,10 @@ import { useAppStore } from "../stores/app";
 import { useTelegram } from "../services/telegram";
 import List from "../components/List.vue";
 import Item from "../components/Item.vue";
+import { usePointStore } from "../stores/score";
 
 const app = useAppStore();
+const points = usePointStore()
 const { telegramUser } = useTelegram();
 
 const referalText = ref("Ваша реферальная ссылка");
@@ -18,7 +20,6 @@ const friends = computed(() =>
       }))
     : []
 );
-const pointFriend = ref<number>(50);
 
 function copy() {
   const url = telegramUser?.id
@@ -53,7 +54,7 @@ function copy() {
         v-for="friend in friends"
         :key="friend.id"
         :title="friend.name"
-        :amount="pointFriend"
+        :amount="points.bonusPointsForFriend"
         shadow="friends"
       />
     </List>

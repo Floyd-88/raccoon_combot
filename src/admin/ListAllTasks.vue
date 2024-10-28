@@ -23,7 +23,7 @@ function editClick(id: string) {
 
 <template>
   <div class="flex flex-col justify-center items-center text-white">
-    <div v-if="!edit">
+    <div class="w-full" v-if="!edit">
       <h1 class="text-2xl font-semibold mb-6">List Tasks</h1>
       <List>
         <Item

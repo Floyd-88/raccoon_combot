@@ -54,7 +54,7 @@ const routes = [
       // const id = telegramUser?.id
       const app = useAppStore();
       const adminID = import.meta.env.VITE_ADMIN_TELEGRAM_ID; // Ваш личный Telegram ID
-      if (1 === 1) {
+      if (app.user?.id === +adminID) {
         next();
       } else {
         next('/'); // Если пользователь не админ, перенаправляем на главную страницу

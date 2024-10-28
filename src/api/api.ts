@@ -108,10 +108,11 @@ export const registerRef = async (first_name: string, refId: string) => {
 
       // Проверка, добавлен ли уже этот друг
       if (!friends.includes(first_name)) {
+        const point = usePointStore()
         // Обновляем список друзей и очки
         await update(userRef, {
           friends: { ...friends, telegramID: first_name },
-          totalPoints: (userData.totalPoints || 0) + 50,
+          totalPoints: (userData.totalPoints || 0) + point.bonusPointsForFriend,
         });
         console.log(`Друг ${first_name} добавлен и очки обновлены.`);
       }

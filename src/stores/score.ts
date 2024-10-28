@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { LevelImagesI } from "../types/type";
+// import { LevelImagesI } from "../types/type";
 import { debounce } from "lodash";
 
 import img_1 from "@/assets/img/1.jpg";
@@ -9,16 +9,25 @@ import img_3 from "@/assets/img/3.jpg";
 import img_4 from "@/assets/img/4.jpg";
 import img_5 from "@/assets/img/5.jpg";
 import img_6 from "@/assets/img/6.jpg";
+import img_7 from "@/assets/img/7.jpg";
+import img_8 from "@/assets/img/8.jpg";
+import img_9 from "@/assets/img/9.jpg";
+import img_10 from "@/assets/img/10.jpg";
 import { updateTotalPoints } from "../api/api";
 
-const levelImage: LevelImagesI = {
+const levelImage = {
   level_1: img_1,
   level_2: img_2,
   level_3: img_3,
   level_4: img_4,
   level_5: img_5,
   level_6: img_6,
+  level_7: img_7,
+  level_8: img_8,
+  level_9: img_9,
+  level_10: img_10,
 };
+
 
 const debouncedUpdateScore = debounce(async (points: number) => {
   try {
@@ -36,6 +45,7 @@ const count_levels = new Array(15)
 
 export const usePointStore = defineStore("counter", () => {
   const totalPoints = ref(0);
+  const bonusPointsForFriend = ref(100); //монеты за приглашенного друга
 
   // Вычисляем уровень
   const level = computed(() => {
@@ -77,6 +87,7 @@ export const usePointStore = defineStore("counter", () => {
   }
 
   return {
+    bonusPointsForFriend,
     totalPoints,
     level,
     top_level_progress,

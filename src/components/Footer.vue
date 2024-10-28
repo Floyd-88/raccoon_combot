@@ -19,7 +19,7 @@ const adminID = import.meta.env.VITE_ADMIN_TELEGRAM_ID
     <router-link to="/tasks">
       <PuzzlePieceIcon class="w-8 h-8 text-blue-500 hover:scale-110" />
     </router-link>
-    <router-link to="/admin" v-if="1 === 1">
+    <router-link to="/admin" v-if="Number(app.user?.id) === Number(adminID)">
       <WrenchScrewdriverIcon class="w-8 h-8 text-blue-500 hover:scale-110" />
     </router-link>
   </div>
