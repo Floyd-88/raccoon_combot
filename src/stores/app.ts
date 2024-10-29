@@ -11,15 +11,18 @@ import {
 import { TasksI, UserI } from "../types/type";
 import { usePointStore } from "./score";
 import { useTelegram } from "../services/telegram";
-
-const { telegramUser } = useTelegram();
+import { authenticateBot } from "../services/firebase";
 
 export const useAppStore = defineStore("app", () => {
   const user = ref<UserI | null>(null);
   const tasks = ref<TasksI[]>([]);
 
   async function init(ref: string) {
+
     try {
+      const {telegramUser} = useTelegram()
+      if(!telegramUser) return
+      await authenticateBot(telegramUser.id)
       user.value = await getOrCreateUser();
       const point = usePointStore();
       point.setPoint(user.value.totalPoints);
@@ -76,7 +79,6 @@ export const useAppStore = defineStore("app", () => {
     try {
       await removeTask(localTask)
       tasks.value = tasks.value.filter((task) => task.id !== localTask.id);
-      console.log("Task removed successfully:", localTask.id);
     } catch (error) {
       console.error("Error remove tasks:", error);
     }

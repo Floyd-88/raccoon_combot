@@ -1,17 +1,45 @@
 import { initializeApp } from "firebase/app";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID
-  };
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
 
-  const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const database = getDatabase(app);
 
-export { database };
+// Функция для получения пользовательского токена
+async function getCustomToken(telegramUserId: number) {
+  try {
+    const response = await fetch("http://localhost:3000/generateToken", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ telegramUserId }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to retrieve custom token");
+    }
+
+    const data = await response.json();
+    return data.token;
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+}
+
+// Аутентификация с использованием пользовательского токена
+export async function authenticateBot(telegramUserId: number) {
+  const customToken = await getCustomToken(telegramUserId);
+  await signInWithCustomToken(auth, customToken);
+}

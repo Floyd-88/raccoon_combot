@@ -11,5 +11,16 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  }, 
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Create separate chunks for specific libraries
+          'vendor': ['vue'], 
+          'firebase': ['firebase/app', 'firebase/auth', 'firebase/database']
+        }
+      }
+    }
   }
 })

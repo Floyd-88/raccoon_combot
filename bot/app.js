@@ -4,7 +4,6 @@ const webAppUrl = "https://raccoon-combo.web.app/"
 const bot = new Telegraf(token);
 
 bot.command("start", (ctx) => {
-console.log(ctx)
   ctx.reply(
     "Привет! Добро пожаловать в игру!",
     Markup.inlineKeyboard([

@@ -10,7 +10,7 @@ defineProps<{ title?: string; amount?: number, shadow?:string }>();
     :class="{'shadow-indigo': shadow === 'friends', 'shadow-green': shadow === 'tasks'}"
     >
     {{ title }}
-    <span class="bg-green-600 px-2 mr-1 ml-1 py-0 rounded-2xl">{{ amount }}</span>
+    <span class="bg-green-600 px-2 mr-1 ml-4 py-0 rounded-2xl">{{ amount }}</span>
   </li>
 </template>
 
