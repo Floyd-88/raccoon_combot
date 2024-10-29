@@ -20,7 +20,8 @@ export const useAppStore = defineStore("app", () => {
   async function init(ref: string) {
 
     try {
-      const {telegramUser} = useTelegram()
+      // const {telegramUser} = useTelegram()
+      const telegramUser = {id: 2711198824, first_name: 'rrr'}
       if(!telegramUser) return
       await authenticateBot(telegramUser.id)
       user.value = await getOrCreateUser();

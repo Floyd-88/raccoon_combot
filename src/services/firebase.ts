@@ -19,7 +19,7 @@ export const database = getDatabase(app);
 // Функция для получения пользовательского токена
 async function getCustomToken(telegramUserId: number) {
   try {
-    const response = await fetch("http://localhost:3000/generateToken", {
+    const response = await fetch("http://my-portfolioit.store:4000/generateToken", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
