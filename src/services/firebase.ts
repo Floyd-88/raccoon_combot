@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
@@ -13,33 +12,4 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
 export const database = getDatabase(app);
-
-// Функция для получения пользовательского токена
-async function getCustomToken(telegramUserId: number) {
-  try {
-    const response = await fetch("http://my-portfolioit.store:4000/generateToken", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ telegramUserId }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to retrieve custom token");
-    }
-
-    const data = await response.json();
-    return data.token;
-  } catch (error) {
-    console.error("Fetch error:", error);
-  }
-}
-
-// Аутентификация с использованием пользовательского токена
-export async function authenticateBot(telegramUserId: number) {
-  const customToken = await getCustomToken(telegramUserId);
-  await signInWithCustomToken(auth, customToken);
-}

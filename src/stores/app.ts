@@ -6,25 +6,29 @@ import {
   completeTask,
   registerRef,
   removeTask,
-  editTask
+  editTask,
 } from "../api/api";
 import { TasksI, UserI } from "../types/type";
 import { usePointStore } from "./score";
 import { useTelegram } from "../services/telegram";
-import { authenticateBot } from "../services/firebase";
+import { authenticateWithCustomToken } from "../services/firebaseAuth";
+
+const { telegramUser } = useTelegram();
+const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
 
 export const useAppStore = defineStore("app", () => {
   const user = ref<UserI | null>(null);
   const tasks = ref<TasksI[]>([]);
 
   async function init(ref: string) {
+    if (!telegramID) {
+      console.error("Ошибка: Telegram ID не найден.");
+      return;
+    }
 
     try {
-      const {telegramUser} = useTelegram()
-      // const telegramUser = {id: 2711198824, first_name: 'rrr'} test data
-      if(!telegramUser) return
-      await authenticateBot(telegramUser.id)
-      user.value = await getOrCreateUser();
+      await authenticateWithCustomToken(telegramID);
+      user.value = await getOrCreateUser(telegramID);
       const point = usePointStore();
       point.setPoint(user.value.totalPoints);
 
@@ -67,8 +71,8 @@ export const useAppStore = defineStore("app", () => {
 
   async function editStorageTask(localTask: TasksI) {
     try {
-      await editTask(localTask)
-      tasks.value = tasks.value.map((task) => 
+      await editTask(localTask);
+      tasks.value = tasks.value.map((task) =>
         task.id === localTask.id ? localTask : task
       );
     } catch (error) {
@@ -78,7 +82,7 @@ export const useAppStore = defineStore("app", () => {
 
   async function removeStorageTask(localTask: TasksI) {
     try {
-      await removeTask(localTask)
+      await removeTask(localTask);
       tasks.value = tasks.value.filter((task) => task.id !== localTask.id);
     } catch (error) {
       console.error("Error remove tasks:", error);

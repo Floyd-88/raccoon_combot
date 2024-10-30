@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-// import { LevelImagesI } from "../types/type";
 import { debounce } from "lodash";
 
 import img_1 from "@/assets/img/1.jpg";
@@ -14,6 +13,10 @@ import img_8 from "@/assets/img/8.jpg";
 import img_9 from "@/assets/img/9.jpg";
 import img_10 from "@/assets/img/10.jpg";
 import { updateTotalPoints } from "../api/api";
+import { useTelegram } from "../services/telegram";
+
+const {telegramUser} = useTelegram()
+const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
 
 const levelImage = {
   level_1: img_1,
@@ -28,10 +31,9 @@ const levelImage = {
   level_10: img_10,
 };
 
-
 const debouncedUpdateScore = debounce(async (points: number) => {
   try {
-    await updateTotalPoints(points);
+    await updateTotalPoints(points, telegramID);
   } catch (error) {
     console.error('Error updating total points:', error);
   }

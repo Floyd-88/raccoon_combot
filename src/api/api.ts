@@ -1,12 +1,8 @@
 import { ref, get, update, remove, onValue, set } from "firebase/database";
 import { database } from "../services/firebase";
 import { TasksI, UserI } from "../types/type";
-import { useTelegram } from "../services/telegram";
 import { usePointStore } from "../stores/score";
 import { useAppStore } from "../stores/app";
-
-const { telegramUser } = useTelegram() || {};
-const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
 
 export const fetchTasks = async (): Promise<Record<string, TasksI>> => {
   const userRef = ref(database, "tasks/");
@@ -57,11 +53,10 @@ export async function completeTask(userID: number, task: TasksI) {
   }
 }
 
-export const getOrCreateUser = async (): Promise<UserI> => {
+export const getOrCreateUser = async (telegramID: number): Promise<UserI> => {
   if (!telegramID) {
     throw new Error("Telegram ID is not available");
   }
-
   const userRef = ref(database, `users/${telegramID}`);
 
   try {
@@ -72,7 +67,7 @@ export const getOrCreateUser = async (): Promise<UserI> => {
     } else {
       // Если пользователя нет, создаем его с дефолтными значениями
       const newUser: UserI = {
-        id: telegramID, // Используем telegramID как уникальный идентификатор
+        id: telegramID,
         totalPoints: 0,
         friends: {},
         tasks: {},
@@ -87,7 +82,7 @@ export const getOrCreateUser = async (): Promise<UserI> => {
   }
 };
 
-export const updateTotalPoints = async (totalPoints: number) => {
+export const updateTotalPoints = async (totalPoints: number, telegramID: number) => {
   const userRef = ref(database, `users/${telegramID}`);
 
   try {
