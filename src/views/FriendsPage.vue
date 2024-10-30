@@ -9,6 +9,7 @@ import { usePointStore } from "../stores/score";
 const app = useAppStore();
 const points = usePointStore()
 const { telegramUser } = useTelegram();
+const telegramID = telegramUser?.id ?? import.meta.env.VITE_TEST_TELEGRAM_ID;
 
 const referalText = ref("Ваша реферальная ссылка");
 
@@ -22,8 +23,8 @@ const friends = computed(() =>
 );
 
 function copy() {
-  const url = telegramUser?.id
-    ? "https://t.me/raccoon_clicker_bot?start=" + telegramUser.id
+  const url = telegramID
+    ? "https://t.me/raccoon_clicker_bot?start=" + telegramID
     : "https://t.me/raccoon_clicker_bot";
 
   navigator.clipboard.writeText(url);

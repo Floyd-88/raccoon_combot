@@ -102,22 +102,24 @@ export const registerRef = async (first_name: string, refId: string) => {
       const friends = userData.friends || [];
 
       // Проверка, добавлен ли уже этот друг
-      if (!friends.includes(first_name)) {
-        const point = usePointStore()
+      if (!friends.find((friend: any) => friend.telegramID === first_name)) {
+        const point = usePointStore();
+
         // Обновляем список друзей и очки
         await update(userRef, {
-          friends: { ...friends, telegramID: first_name },
+          friends: [...friends, { telegramID: first_name }],
           totalPoints: (userData.totalPoints || 0) + point.bonusPointsForFriend,
         });
         console.log(`Друг ${first_name} добавлен и очки обновлены.`);
       }
     } else {
-      console.error("Пользователь не найден.");
+      console.error("Пользователь уже находится в друзьях");
     }
   } catch (error) {
     console.error("Ошибка при обновлении данных пользователя:", error);
   }
 };
+
 
 export const removeTask = async (localTask: TasksI) => {
   try {
